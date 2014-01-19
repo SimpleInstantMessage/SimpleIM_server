@@ -1,5 +1,7 @@
-<serverInformation>
-<portNumber></portNumber>
-<userID></userID>
-<password></password>
-</serverInformation>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>Server</comment>
+<entry key="port">10000</entry>
+<entry key="amountOfUser">1000</entry>
+</properties>
