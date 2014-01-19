@@ -1,8 +1,8 @@
 package org.simpleim.server;
 
 import org.simpleim.server.server.Server;
-import org.simpliem.preference.GetPortNum;
-
+import org.simpleim.server.util.AccountGenerator;
+import org.simpleim.server.util.Preference;
 
 public class Main {
 	/**
@@ -10,14 +10,24 @@ public class Main {
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
-		int port;
-		port=new GetPortNum().getPortNubmer();
-		new Server(port).run();
-		/**
-		 * 两种句式任选一种
-		 */
-		//new Server(new GetPortNum().getPortNubmer()).run();
-	
+		Runtime.getRuntime().addShutdownHook(new ExitHandler());
+
+		new Server(Preference.getPortNumber()).run();
 	}
 
+	private static class ExitHandler extends Thread {
+		public ExitHandler() {
+			super("Exit Handler");
+		}
+
+		public void run() {
+			System.out.println("exiting");
+			Preference.setAmountOfUser(AccountGenerator.currentCounter());
+			if(Preference.store())
+				System.out.println("exit successfully");
+			else
+				System.out.println("exit unsuccessfully");
+			System.out.println("exited");
+		}
+	}
 }

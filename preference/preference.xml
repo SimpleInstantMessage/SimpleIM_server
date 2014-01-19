@@ -3,5 +3,5 @@
 <properties>
 <comment>Server</comment>
 <entry key="port">10000</entry>
-<entry key="amountOfUser">1000</entry>
+<entry key="amountOfUser">0</entry>
 </properties>
