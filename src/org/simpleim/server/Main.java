@@ -1,5 +1,8 @@
 package org.simpleim.server;
 
+import java.sql.SQLException;
+
+import org.simpleim.server.database.DataBase;
 import org.simpleim.server.server.Server;
 import org.simpleim.server.util.AccountGenerator;
 import org.simpleim.server.util.Preference;
@@ -11,7 +14,7 @@ public class Main {
 	 */
 	public static void main(String[] args) throws Exception {
 		Runtime.getRuntime().addShutdownHook(new ExitHandler());
-
+        
 		new Server(Preference.getPortNumber()).run();
 	}
 
@@ -27,6 +30,12 @@ public class Main {
 				System.out.println("exit successfully");
 			else
 				System.out.println("exit unsuccessfully");
+			try {
+				DataBase.CloseDataBase();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			System.out.println("exited");
 		}
 	}

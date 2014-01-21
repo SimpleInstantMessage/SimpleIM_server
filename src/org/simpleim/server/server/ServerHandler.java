@@ -12,21 +12,26 @@ import org.simpleim.common.message.FailureResponse;
 import org.simpleim.common.message.NewAccountOkResponse;
 import org.simpleim.common.message.NewAccountRequest;
 import org.simpleim.common.message.Response;
+import org.simpleim.server.database.DataBase;
 import org.simpleim.server.util.AccountGenerator;
 
 public class ServerHandler extends ChannelHandlerAdapter {
 
 	private static final Logger logger = Logger.getLogger(ServerHandler.class.getName());
-
+    private String id;
+    private String password;
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 		boolean keepAlive = false;
 		Response response = null;
 		if(msg instanceof NewAccountRequest) {
 			keepAlive = false;
+			id=AccountGenerator.nextId();
+			password=AccountGenerator.generatePassword();
 			response = new NewAccountOkResponse()
-						.setId(AccountGenerator.nextId())
-						.setPassword(AccountGenerator.generatePassword());
+						.setId(id)
+						.setPassword(password);
+			DataBase.InsertNumberRow(id, password);
 		} else {
 			keepAlive = false;
 			response = new FailureResponse();
