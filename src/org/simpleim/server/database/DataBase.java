@@ -2,7 +2,6 @@ package org.simpleim.server.database;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Properties;
@@ -62,14 +61,21 @@ public final class DataBase {
     }
     
     public static String selectNumerRow(String id) throws SQLException{
-    	String sql="select password from number where id='"+id+"'";
-    	String password;
+    	String sql="select password from "+prop.getProperty(KEY_TABLE_NAME)+" where id='"+id+"'";
+    	String password = null;
     	Statement statement=conn.createStatement();
     	ResultSet rs=statement.executeQuery(sql);
-    	rs.next();
-    	password=rs.getString("password");
-    	rs.close();
-    	return password;
+    	if(rs.next()){
+    	   password=rs.getString("password");
+    	   rs.close();
+    	   return password;
+    	}
+    	else{
+    		System.err.println("用户名不存在");
+    		rs.close();
+    		return null;
+    	}
+    	
     }
      
     public static LinkedList<String> selectOnlineNumber(){
