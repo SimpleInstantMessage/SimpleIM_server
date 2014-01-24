@@ -1,8 +1,9 @@
 package org.simpleim.server.util;
 
-import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.concurrent.atomic.AtomicLong;
+
+import com.lambdaworks.codec.Base64;
 
 public final class AccountGenerator {
 	private static final AtomicLong COUNTER = new AtomicLong(Preference.getAmountOfUser());
@@ -20,6 +21,8 @@ public final class AccountGenerator {
 	}
 
 	public static String generatePassword() {
-		return new BigInteger(1024, random).toString(Character.MAX_RADIX);
+		byte[] password = new byte[1024];
+		random.nextBytes(password);
+		return String.copyValueOf(Base64.encode(password, false));
 	}
 }
