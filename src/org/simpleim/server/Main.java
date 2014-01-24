@@ -13,8 +13,10 @@ public class Main {
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
-		Runtime.getRuntime().addShutdownHook(new ExitHandler());
-        
+		
+        if(Preference.isFirstUse()==true)
+        	Preference.preferenceInit();
+        Runtime.getRuntime().addShutdownHook(new ExitHandler());
 		new Server(Preference.getPortNumber()).run();
 	}
 

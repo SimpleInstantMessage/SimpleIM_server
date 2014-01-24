@@ -18,12 +18,12 @@ import org.simpleim.server.util.AccountGenerator;
 public class ServerHandler extends ChannelHandlerAdapter {
 
 	private static final Logger logger = Logger.getLogger(ServerHandler.class.getName());
-    private String id;
-    private String password;
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 		boolean keepAlive = false;
 		Response response = null;
+		String id;
+	    String password;
 		if(msg instanceof NewAccountRequest) {
 			keepAlive = false;
 			id=AccountGenerator.nextId();
@@ -31,7 +31,7 @@ public class ServerHandler extends ChannelHandlerAdapter {
 			response = new NewAccountOkResponse()
 						.setId(id)
 						.setPassword(password);
-			DataBase.InsertNumberRow(id, password);
+			DataBase.InsertNumberRow(id,password);
 		} else {
 			keepAlive = false;
 			response = new FailureResponse();

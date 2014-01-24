@@ -20,8 +20,7 @@ public final class DataBase {
     private static final String KEY_DB_PASSWORD="databasePassword";
     private static final String KEY_DB_DRIVER="databaseDriver";
     private static final String FILE_PATH = "preference/preference.xml";
-    private static final String KEY_DB_NAME="databaseName";
-    private static final String KEY_TABLE_NAME="databaseTableNumberName";
+    private static final String KEY_DB="DataBase";
     
     private static final Properties prop = new Properties();
     private static Connection conn;
@@ -32,9 +31,14 @@ public final class DataBase {
     		/**
     		 * @参数 url，数据库用户名，数据库密码
     		 */
-    		conn=DriverManager.getConnection("jdbc:mysql://"+prop.getProperty(KEY_IP)+":"+prop.getProperty(KEY_PORT)+"/"+prop.getProperty(KEY_DB_NAME), 
-    				                         prop.getProperty(KEY_DB_USER_NAME), 
-    				                         prop.getProperty(KEY_DB_PASSWORD));
+    		conn=DriverManager.getConnection("jdbc:"+prop.getProperty(KEY_DB)+"://"+
+    		                                         prop.getProperty(KEY_IP)+":"+
+    				                                 prop.getProperty(KEY_PORT)+"/"+
+    		                                         "sim",
+    		                                         
+    				                                 prop.getProperty(KEY_DB_USER_NAME), 
+    				                                 
+    				                                 prop.getProperty(KEY_DB_PASSWORD));
     		if(!conn.isClosed())
                System.out.println("Succeeded connecting to the Database!");
     	} catch (FileNotFoundException e) {
@@ -47,21 +51,45 @@ public final class DataBase {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			/**
+			 * 如果连接数据库异常，则视为数据库不存在的情况
+			 * 系统自动配置数据库基本信息
+			 * 创建数据库和数据表
+			 * */
+			try {
+				 conn=DriverManager.getConnection("jdbc:"+prop.getProperty(KEY_DB)+"://"+
+				                                                    prop.getProperty(KEY_IP)+":"+
+				                                                    prop.getProperty(KEY_PORT)+"/?user="+
+						                                            prop.getProperty(KEY_DB_USER_NAME)+"&password="+
+				                                                    prop.getProperty(KEY_DB_PASSWORD));
+				 if(!conn.isClosed())
+		               System.out.println("Succeeded connecting to the Database!");
+				Statement sm=conn.createStatement();
+				sm.executeUpdate("CREATE DATABASE sim");
+				sm.executeUpdate("use sim");
+				//如果数据库不存在的话，数据库表就不可能存在，接着创建数据库表
+				String createDB="Create table number( id        char(21)     not null,"
+						                               + "password varchar(255) not null,"
+						                               + "primary key(id))";
+				sm.executeUpdate(createDB);
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
     }
     private DataBase(){}
-    
+    /**
+     * 插入一个已经创建的用户信息
+     * */
     public static void InsertNumberRow(String id,String password) throws SQLException{
     	Statement statement=conn.createStatement();
-    	String sql="INSERT INTO "+prop.getProperty(KEY_TABLE_NAME)
-    			   +" VALUES ('"+id+"','"+password+"')";
+    	String sql="INSERT INTO number VALUES ('"+id+"','"+password+"')";
     	statement.executeUpdate(sql);
     }
     
     public static String selectNumerRow(String id) throws SQLException{
-    	String sql="select password from "+prop.getProperty(KEY_TABLE_NAME)+" where id='"+id+"'";
+    	String sql="select password from number where id='"+id+"'";
     	String password = null;
     	Statement statement=conn.createStatement();
     	ResultSet rs=statement.executeQuery(sql);
@@ -82,6 +110,7 @@ public final class DataBase {
     	LinkedList<String> id = null;
     	return id;
     }
+    
     public static void deleteOfflineNumber(){
     	
     }
@@ -89,6 +118,9 @@ public final class DataBase {
     public static void insertOnlineNumber(String id){
     	
     }
+    /**
+     * 关闭数据库的连接
+     * */
     public static void CloseDataBase() throws SQLException{
     	conn.close();
     }

@@ -1,10 +1,9 @@
 package org.simpleim.server.database;
 
-import java.sql.SQLException;
+import java.sql.*;
 
 public class testDB {
    public static void main(String args[]) throws SQLException{
-	   DataBase.InsertNumberRow("111","sss");
-	   System.out.println(DataBase.selectNumerRow("111"));
+	   DataBase.InsertNumberRow("1111","ddddddd");
    }
 }
