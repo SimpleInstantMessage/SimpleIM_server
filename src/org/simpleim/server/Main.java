@@ -14,9 +14,9 @@ public class Main {
 	 */
 	public static void main(String[] args) throws Exception {
 		
-        if(Preference.isFirstUse()==true)
-        	Preference.preferenceInit();
-        Runtime.getRuntime().addShutdownHook(new ExitHandler());
+		if(Preference.isFirstUse())
+			Preference.preferenceInit();
+		Runtime.getRuntime().addShutdownHook(new ExitHandler());
 		new Server(Preference.getPortNumber()).run();
 	}
 

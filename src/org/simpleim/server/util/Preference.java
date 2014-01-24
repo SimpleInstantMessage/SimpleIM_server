@@ -52,9 +52,9 @@ public final class Preference {
 		System.out.println("--------第一次使用SimpleIM，首先需要配置一下基本信息--------");
 		System.out.print("SimpleIm的服务端口号(1024~65535):");
 		properties.setProperty(KEY_PORT_NUMBER, scanner.next());
-		System.out.print("数据库所在的IP地址:");
+		System.out.print("数据库host地址:");
 		properties.setProperty(KEY_IP,scanner.next());
-		System.out.print("数据库的端口号(1024~65535):");
+		System.out.print("数据库端口号:");
 		properties.setProperty(KEY_PORT, scanner.next());
 		System.out.println("数据库类型<输入你使用的数据库序列号>");
 		System.out.println("	1.oracle");
@@ -78,8 +78,10 @@ public final class Preference {
 		}
 		System.out.print("数据库用户名:");
 		properties.setProperty(KEY_DB_USER_NAME, scanner.next());
+		if(scanner.hasNextLine())
+			scanner.nextLine();
 		System.out.print("数据库密码:");
-		properties.setProperty(KEY_DB_PASSWORD, scanner.next());
+		properties.setProperty(KEY_DB_PASSWORD, scanner.nextLine());
 		properties.setProperty("status", "initialized");
 		try(FileOutputStream fos= new FileOutputStream(FILE_PATH) ){
 			properties.storeToXML(fos, "Server");

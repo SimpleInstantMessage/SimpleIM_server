@@ -66,11 +66,10 @@ public final class DataBase {
 		               System.out.println("Succeeded connecting to the Database!");
 				Statement sm=conn.createStatement();
 				sm.executeUpdate("CREATE DATABASE sim");
-				sm.executeUpdate("use sim");
+				sm.executeUpdate("USE sim");
 				//如果数据库不存在的话，数据库表就不可能存在，接着创建数据库表
-				String createDB="Create table number( id        char(21)     not null,"
-						                               + "password varchar(255) not null,"
-						                               + "primary key(id))";
+				String createDB="CREATE TABLE number"
+						+ "( id VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, PRIMARY KEY(id))";
 				sm.executeUpdate(createDB);
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block

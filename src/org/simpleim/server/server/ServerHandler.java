@@ -15,6 +15,8 @@ import org.simpleim.common.message.Response;
 import org.simpleim.server.database.DataBase;
 import org.simpleim.server.util.AccountGenerator;
 
+import com.lambdaworks.crypto.SCryptUtil;
+
 public class ServerHandler extends ChannelHandlerAdapter {
 
 	private static final Logger logger = Logger.getLogger(ServerHandler.class.getName());
@@ -31,7 +33,8 @@ public class ServerHandler extends ChannelHandlerAdapter {
 			response = new NewAccountOkResponse()
 						.setId(id)
 						.setPassword(password);
-			DataBase.InsertNumberRow(id,password);
+			String hashedPassword = SCryptUtil.scrypt(password, 1 << 15, 8, 1);
+			DataBase.InsertNumberRow(id, hashedPassword);
 		} else {
 			keepAlive = false;
 			response = new FailureResponse();
