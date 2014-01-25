@@ -22,12 +22,12 @@ public class ServerHandler extends ChannelHandlerAdapter {
 	private static final Logger logger = Logger.getLogger(ServerHandler.class.getName());
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		boolean keepAlive = false;
+		boolean closeNow = true;
 		Response response = null;
 		String id;
-	    String password;
+		String password;
 		if(msg instanceof NewAccountRequest) {
-			keepAlive = false;
+			closeNow = true;
 			id=AccountGenerator.nextId();
 			password=AccountGenerator.generatePassword();
 			response = new NewAccountOkResponse()
@@ -36,11 +36,11 @@ public class ServerHandler extends ChannelHandlerAdapter {
 			String hashedPassword = SCryptUtil.scrypt(password, 1 << 15, 8, 1);
 			DataBase.InsertNumberRow(id, hashedPassword);
 		} else {
-			keepAlive = false;
+			closeNow = true;
 			response = new FailureResponse();
 		}
 		ChannelFuture f = ctx.write(response);
-		if(!keepAlive)
+		if(closeNow)
 			f.addListener(ChannelFutureListener.CLOSE);
 	}
 
