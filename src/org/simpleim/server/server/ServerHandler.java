@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.simpleim.common.message.FailureResponse;
+import org.simpleim.common.message.LoginRequest;
 import org.simpleim.common.message.NewAccountOkResponse;
 import org.simpleim.common.message.NewAccountRequest;
 import org.simpleim.common.message.Response;
@@ -35,6 +36,11 @@ public class ServerHandler extends ChannelHandlerAdapter {
 						.setPassword(password);
 			String hashedPassword = SCryptUtil.scrypt(password, 1 << 15, 8, 1);
 			DataBase.InsertNumberRow(id, hashedPassword);
+		} else if(msg instanceof LoginRequest){
+			closeNow = false;
+			LoginRequest request = (LoginRequest) msg;
+			id = request.getId();
+			password = request.getPassword();
 		} else {
 			closeNow = true;
 			response = new FailureResponse();
