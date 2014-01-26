@@ -8,7 +8,10 @@ import io.netty.channel.ChannelHandlerContext;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.simpleim.common.message.*;
+import org.simpleim.common.message.FailureResponse;
+import org.simpleim.common.message.NewAccountOkResponse;
+import org.simpleim.common.message.NewAccountRequest;
+import org.simpleim.common.message.Response;
 import org.simpleim.server.database.DataBase;
 import org.simpleim.server.util.AccountGenerator;
 
@@ -16,40 +19,40 @@ import com.lambdaworks.crypto.SCryptUtil;
 
 public class ServerHandler extends ChannelHandlerAdapter {
 
-    private static final Logger logger = Logger.getLogger(ServerHandler.class.getName());
-    @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-            boolean closeNow = true;
-            Response response = null;
-            String id;
-            String password;
-            if(msg instanceof NewAccountRequest) {
-                    closeNow = true;
-                    id=AccountGenerator.nextId();
-                    password=AccountGenerator.generatePassword();
-                    response = new NewAccountOkResponse()
-                                            .setId(id)
-                                            .setPassword(password);
-                    String hashedPassword = SCryptUtil.scrypt(password, 1 << 15, 8, 1);
-                    DataBase.InsertNumberRow(id, hashedPassword);
-            } else {
-                    closeNow = true;
-                    response = new FailureResponse();
-            }
-            ChannelFuture f = ctx.write(response);
-            if(closeNow)
-                    f.addListener(ChannelFutureListener.CLOSE);
-    }
+	private static final Logger logger = Logger.getLogger(ServerHandler.class.getName());
+	@Override
+	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+		boolean closeNow = true;
+		Response response = null;
+		String id;
+		String password;
+		if(msg instanceof NewAccountRequest) {
+			closeNow = true;
+			id=AccountGenerator.nextId();
+			password=AccountGenerator.generatePassword();
+			response = new NewAccountOkResponse()
+						.setId(id)
+						.setPassword(password);
+			String hashedPassword = SCryptUtil.scrypt(password, 1 << 15, 8, 1);
+			DataBase.InsertNumberRow(id, hashedPassword);
+		} else {
+			closeNow = true;
+			response = new FailureResponse();
+		}
+		ChannelFuture f = ctx.write(response);
+		if(closeNow)
+			f.addListener(ChannelFutureListener.CLOSE);
+	}
 
-    @Override
-    public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
-            ctx.flush();
-    }
+	@Override
+	public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
+		ctx.flush();
+	}
 
-    @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-            // Close the connection when an exception is raised.
-            logger.log(Level.WARNING, "Unexpected exception from downstream.", cause);
-            ctx.close();
-    }
+	@Override
+	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+		// Close the connection when an exception is raised.
+		logger.log(Level.WARNING, "Unexpected exception from downstream.", cause);
+		ctx.close();
+	}
 }
