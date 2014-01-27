@@ -95,13 +95,11 @@ public final class DataBase {
 	 */
     public static String selectNumerRow(String id) throws SQLException{
     	String sql="select password from number where id='"+id+"'";
-		System.out.println(sql);
     	String password = null;
     	Statement statement=conn.createStatement();
     	ResultSet rs=statement.executeQuery(sql);
     	if(rs.next()){
     	   password=rs.getString("password");
-		   System.out.println(password);
     	   rs.close();
     	   return password;
     	}
