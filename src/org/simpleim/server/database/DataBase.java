@@ -86,7 +86,13 @@ public final class DataBase {
     	String sql="INSERT INTO number VALUES ('"+id+"','"+password+"')";
     	statement.executeUpdate(sql);
     }
-    
+
+	/**
+	 * query the password of the Account on the server
+	 * @param id the id of the Account
+	 * @return the password of the Account if Account exists, null if doesn't exist
+	 * @throws SQLException
+	 */
     public static String selectNumerRow(String id) throws SQLException{
     	String sql="select password from number where id='"+id+"'";
 		System.out.println(sql);
@@ -104,7 +110,6 @@ public final class DataBase {
     		rs.close();
     		return null;
     	}
-    	
     }
      
     /**
