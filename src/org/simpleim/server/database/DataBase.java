@@ -3,7 +3,6 @@ package org.simpleim.server.database;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.Properties;
 import java.sql.*;
 /**
@@ -71,6 +70,7 @@ public final class DataBase {
 				String createDB="CREATE TABLE number"
 						+ "( id VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, PRIMARY KEY(id))";
 				sm.executeUpdate(createDB);
+				sm.close();
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -89,11 +89,13 @@ public final class DataBase {
     
     public static String selectNumerRow(String id) throws SQLException{
     	String sql="select password from number where id='"+id+"'";
+		System.out.println(sql);
     	String password = null;
     	Statement statement=conn.createStatement();
     	ResultSet rs=statement.executeQuery(sql);
     	if(rs.next()){
     	   password=rs.getString("password");
+		   System.out.println(password);
     	   rs.close();
     	   return password;
     	}
@@ -105,18 +107,6 @@ public final class DataBase {
     	
     }
      
-    public static LinkedList<String> selectOnlineNumber(){
-    	LinkedList<String> id = null;
-    	return id;
-    }
-    
-    public static void deleteOfflineNumber(){
-    	
-    }
-    
-    public static void insertOnlineNumber(String id){
-    	
-    }
     /**
      * 关闭数据库的连接
      * */
