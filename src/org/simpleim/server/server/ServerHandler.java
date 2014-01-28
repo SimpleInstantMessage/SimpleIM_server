@@ -114,6 +114,12 @@ public class ServerHandler extends ChannelHandlerAdapter {
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
 		// Close the connection when an exception is raised.
+		Message message=null;
+		onlineUsers.remove(UserId);
+		message = new LogoutNotification().setUserLoggedOutId(UserId);
+		final Collection<ChannelHandlerContext> channels = onlineUsers.values();
+		for(ChannelHandlerContext aChannel : channels)
+			aChannel.writeAndFlush(message);
 		logger.log(Level.WARNING, "Unexpected exception from downstream.", cause);
 		ctx.close();
 	}
