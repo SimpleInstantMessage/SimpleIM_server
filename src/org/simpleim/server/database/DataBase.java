@@ -81,10 +81,11 @@ public final class DataBase {
     /**
      * 插入一个已经创建的用户信息
      * */
-    public static void InsertNumberRow(String id,String password) throws SQLException{
+    public static  void InsertNumberRow(String id,String password) throws SQLException{
     	Statement statement=conn.createStatement();
     	String sql="INSERT INTO number VALUES ('"+id+"','"+password+"')";
     	statement.executeUpdate(sql);
+    	statement.close();
     }
 
 	/**
@@ -100,12 +101,12 @@ public final class DataBase {
     	ResultSet rs=statement.executeQuery(sql);
     	if(rs.next()){
     	   password=rs.getString("password");
-    	   rs.close();
+    	   statement.close();
     	   return password;
     	}
     	else{
     		System.err.println("用户名不存在");
-    		rs.close();
+    		statement.close();
     		return null;
     	}
     }
