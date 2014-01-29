@@ -3,12 +3,12 @@
 <properties>
 <comment>Server</comment>
 <entry key="port">10000</entry>
-<entry key="status">initialized</entry>
-<entry key="databaseIP">127.0.0.1</entry>
-<entry key="databasePort">5000</entry>
+<entry key="status">uninitialized</entry>
+<entry key="databaseIP"></entry>
+<entry key="databasePort"></entry>
 <entry key="databaseDriver">com.mysql.jdbc.Driver</entry>
 <entry key="amountOfUser">0</entry>
-<entry key="databaseUserName">root</entry>
 <entry key="DataBase">mysql</entry>
-<entry key="databasePassword">huang19910311@he</entry>
+<entry key="databaseUserName"></entry>
+<entry key="databasePassword"></entry>
 </properties>
