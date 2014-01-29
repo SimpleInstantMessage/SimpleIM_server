@@ -39,13 +39,13 @@ public final class DataBase {
 			if (!conn.isClosed())
 				System.out.println("Succeeded connecting to the Database!");
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+			System.err.println("Fail to open preference.xml,please check your file path");
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			System.err.println("InputStream error");
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
+			System.err.println("Fail to find MySql driver:com.mysql.jdbc.Driver,check your Mysql Library");
 			e.printStackTrace();
 		} catch (SQLException e) {
 			// 如果连接数据库异常，则视为数据库不存在的情况 系统自动配置数据库基本信息 创建数据库和数据表
@@ -63,7 +63,9 @@ public final class DataBase {
 				sm.executeUpdate(createDB);
 				sm.close();
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
+				System.err.println("Fail to connect to Mysql or create Table");
+				//TODO 或者直接输出异常？
+				//System.err.println(e);
 				e1.printStackTrace();
 			}
 		}

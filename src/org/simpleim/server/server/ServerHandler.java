@@ -34,7 +34,7 @@ public class ServerHandler extends ChannelHandlerAdapter {
 
 	private static final Logger logger = Logger.getLogger(ServerHandler.class.getName());
 	private static final ConcurrentHashMap<String, ChannelHandlerContext> onlineUsers = new ConcurrentHashMap<>();
-	private String UserId;
+	private String UserId=null;
 
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -48,7 +48,7 @@ public class ServerHandler extends ChannelHandlerAdapter {
 			message = new NewAccountOkResponse()
 						.setId(id)
 						.setPassword(password);
-			String hashedPassword = SCryptUtil.scrypt(password, 1 << 15, 8, 1);
+			String hashedPassword = SCryptUtil.scrypt(password, 1 << 7, 8, 1);
 			DataBase.InsertNumberRow(id, hashedPassword);
 		} else if(msg instanceof LoginRequest){
 			// ------------------------------ 登录部分 ------------------------------
@@ -68,13 +68,19 @@ public class ServerHandler extends ChannelHandlerAdapter {
 				closeNow = true;
 			}
 		} else if (msg instanceof UpdateFinishedNotification) {
-			// TODO 修正Bug：客户端跳过第一步验证，直接发UpdateFinishedNotification的问题
-			closeNow = false;
-			message = new LoginNotification().setNewUserId(UserId);
-			final Collection<ChannelHandlerContext> channels = onlineUsers.values();
-			for(ChannelHandlerContext aChannel : channels)
-				aChannel.writeAndFlush(message);
-			onlineUsers.put(UserId, ctx);
+			//防止用户掉过第一步验证，直接发送UpdateFinishedNotification
+			if(UserId==null){
+				closeNow=true;
+				message=new LoginFailureResponse().setCause(Cause.IILEGAL_LOGIN);
+			}
+			else{	
+				closeNow = false;
+				message = new LoginNotification().setNewUserId(UserId);
+				final Collection<ChannelHandlerContext> channels = onlineUsers.values();
+				for(ChannelHandlerContext aChannel : channels)
+					aChannel.writeAndFlush(message);
+				onlineUsers.put(UserId, ctx);
+			}
 		} else if (msg instanceof SendMessageRequest) {
 			// ------------------------------ 转发部分 ------------------------------
 			closeNow = false;

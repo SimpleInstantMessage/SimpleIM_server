@@ -25,7 +25,6 @@ public class Server {
 			b.group(bossGroup, workerGroup)
 					.channel(NioServerSocketChannel.class)
 					.option(ChannelOption.SO_BACKLOG, 100)
-					//TODO 删除调试日志？
 					.handler(new LoggingHandler(LogLevel.INFO))
 					.childHandler(new ServerHandlerInitializer());
 

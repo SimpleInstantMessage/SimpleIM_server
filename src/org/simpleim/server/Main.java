@@ -35,7 +35,7 @@ public class Main {
 			try {
 				DataBase.CloseDataBase();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
+				System.err.println("Fail to close DataBase");
 				e.printStackTrace();
 			}
 			System.out.println("exited");

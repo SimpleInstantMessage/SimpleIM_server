@@ -14,8 +14,6 @@ public final class Preference {
     private static final String KEY_IP="databaseIP";
     private static final String KEY_DB_USER_NAME="databaseUserName";
     private static final String KEY_DB_PASSWORD="databasePassword";
-    private static final String KEY_DB_DRIVER="databaseDriver";
-    private static final String KEY_DB="DataBase";
 
 	private static final Properties properties = new Properties();
 	static {
@@ -56,26 +54,6 @@ public final class Preference {
 		properties.setProperty(KEY_IP,scanner.next());
 		System.out.print("DataBase Port Number:");
 		properties.setProperty(KEY_PORT, scanner.next());
-		System.out.println("DataBase Type<Type The Number in this list>");
-		System.out.println("	1.oracle");
-		System.out.println("	2.mysql");
-		System.out.println("	3.sqlserver");
-		System.out.println("	4.PostgreSQL ");
-		System.out.print("Choose DataBase(Support Mysql Only):");
-		switch(scanner.next()){
-		      case "1":properties.setProperty(KEY_DB_DRIVER, null);
-		               properties.setProperty(KEY_DB, null);
-		               break;
-		      case "2":properties.setProperty(KEY_DB_DRIVER, "com.mysql.jdbc.Driver");
-                       properties.setProperty(KEY_DB, "mysql");
-                       break;
-		      case "3":properties.setProperty(KEY_DB_DRIVER, null);
-                       properties.setProperty(KEY_DB, null);
-                       break;
-		      case "4":properties.setProperty(KEY_DB_DRIVER, null);
-                       properties.setProperty(KEY_DB, null);
-                       break;
-		}
 		System.out.print("DataBase UserName:");
 		properties.setProperty(KEY_DB_USER_NAME, scanner.next());
 		if(scanner.hasNextLine())
@@ -83,12 +61,7 @@ public final class Preference {
 		System.out.print("DataBase Password:");
 		properties.setProperty(KEY_DB_PASSWORD, scanner.nextLine());
 		properties.setProperty("status", "initialized");
-		try(FileOutputStream fos= new FileOutputStream(FILE_PATH) ){
-			properties.storeToXML(fos, "Server");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		store();
 		
 	}
 	
@@ -116,6 +89,7 @@ public final class Preference {
 						+ " times. Try again");
 			}
 		}
+		System.err.println("Cannot store to preference.xml");
 		return false;
 	}
 }
