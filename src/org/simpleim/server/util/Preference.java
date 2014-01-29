@@ -49,19 +49,19 @@ public final class Preference {
 	public static void preferenceInit(){
 		@SuppressWarnings("resource")
 		Scanner scanner=new Scanner(System.in);
-		System.out.println("--------第一次使用SimpleIM，首先需要配置一下基本信息--------");
-		System.out.print("SimpleIm的服务端口号(1024~65535):");
+		System.out.println("--------It is first time to use SimpleIM，please set up basic information--------");
+		System.out.print("SimpleIm's Service Port Number(1024~65535):");
 		properties.setProperty(KEY_PORT_NUMBER, scanner.next());
-		System.out.print("数据库host地址:");
+		System.out.print("DataBase Server Host Address:");
 		properties.setProperty(KEY_IP,scanner.next());
-		System.out.print("数据库端口号:");
+		System.out.print("DataBase Port Number:");
 		properties.setProperty(KEY_PORT, scanner.next());
-		System.out.println("数据库类型<输入你使用的数据库序列号>");
+		System.out.println("DataBase Type<Type The Number in this list>");
 		System.out.println("	1.oracle");
 		System.out.println("	2.mysql");
 		System.out.println("	3.sqlserver");
 		System.out.println("	4.PostgreSQL ");
-		System.out.print("选择数据库(目前仅支持mysql):");
+		System.out.print("Choose DataBase(Support Mysql Only):");
 		switch(scanner.next()){
 		      case "1":properties.setProperty(KEY_DB_DRIVER, null);
 		               properties.setProperty(KEY_DB, null);
@@ -76,11 +76,11 @@ public final class Preference {
                        properties.setProperty(KEY_DB, null);
                        break;
 		}
-		System.out.print("数据库用户名:");
+		System.out.print("DataBase UserName:");
 		properties.setProperty(KEY_DB_USER_NAME, scanner.next());
 		if(scanner.hasNextLine())
 			scanner.nextLine();
-		System.out.print("数据库密码:");
+		System.out.print("DataBase Password:");
 		properties.setProperty(KEY_DB_PASSWORD, scanner.nextLine());
 		properties.setProperty("status", "initialized");
 		try(FileOutputStream fos= new FileOutputStream(FILE_PATH) ){
