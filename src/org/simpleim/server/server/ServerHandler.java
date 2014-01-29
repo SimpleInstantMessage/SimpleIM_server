@@ -106,9 +106,11 @@ public class ServerHandler extends ChannelHandlerAdapter {
 		if(closeNow)
 			f.addListener(ChannelFutureListener.CLOSE);
 	}
-	
-		
-	
+
+	@Override
+	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+		System.gc();
+	}
 
 	@Override
 	public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
@@ -125,7 +127,6 @@ public class ServerHandler extends ChannelHandlerAdapter {
 		for(ChannelHandlerContext aChannel : channels)
 			aChannel.writeAndFlush(message);
 		logger.log(Level.WARNING, "Unexpected exception from downstream.", cause);
-		ctx.write(null).addListener(ChannelFutureListener.CLOSE);
 		ctx.close();
 	}
 }
